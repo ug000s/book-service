@@ -1,0 +1,6 @@
+docker run --name mysqldb -p 3306:3306 -v mysql_volume:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=1234 -e LANG=C.UTF-8 -d mysql:9.6
+mkdir book-service && cd book-service && npm init -y
+npm i dotenv nodemon -D
+npm i express cross-env
+npm i sequelize
+npm i mysql2
