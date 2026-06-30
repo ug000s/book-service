@@ -60,7 +60,35 @@ export const findBookByIsbn = async (isbn) => {
 }
 
 export const removeBook = async (isbn) => {
-    // TODO: Implement removeBook service
+    const transaction = await sequelize.transaction();
+    try {
+        const book = await bookRepository.findBookById(isbn, {
+            transaction,
+            include: [
+                {
+                    model: Author,
+                    as: 'authors',
+                    attributes: {
+                        include: ['name', [sequelize.col('birth_date'), 'birthDate']],
+                        exclude: ['birth_date']
+                    },
+                    through: {
+                        attributes: []
+                    }
+                },
+            ],
+        })
+        if (!book) {
+            throw new Error(`Book with ISBN ${isbn} not found`);
+        }
+        await book.destroy({transaction});
+        await transaction.commit();
+        return book;
+    } catch (e) {
+        await transaction.rollback();
+        console.log('Error removing book:', e);
+        throw e;
+    }
 }
 
 export const updateBookTitle = async (isbn, title) => {

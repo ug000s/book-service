@@ -9,6 +9,7 @@ import errorHandler from "./middlewares/error.middleware.js";
 
 dotenv.config();
 const app = express();
+
 app.use(express.json());
 app.use(bookRoutes);
 app.use(authorRoutes);
