@@ -147,5 +147,25 @@ export const findBooksByAuthor = async (authorName) => {
 }
 
 export const findBooksByPublisher = async (publisherName) => {
-    // TODO: Implement findBooksByPublisher service
+    if (!await publisherRepository.findPublisherById(publisherName)) {
+        throw new Error(`Publisher with name ${publisherName} not found`);
+    }
+    return await bookRepository.findBooks({
+        where: {
+            publisher: publisherName
+        },
+        include: [
+            {
+                model: Author,
+                as: 'authors',
+                attributes: {
+                    include: ['name', [sequelize.col('birth_date'), 'birthDate']],
+                    exclude: ['birth_date']
+                },
+                through: {
+                    attributes: []
+                }
+            }
+        ],
+    });
 }
