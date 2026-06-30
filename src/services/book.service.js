@@ -113,8 +113,7 @@ export const updateBookTitle = async (isbn, title) => {
         if (!book) {
             throw new Error(`Book with ISBN ${isbn} not found`);
         }
-        book.title = title;
-        await book.save({transaction});
+        await book.update({title}, {transaction});
         await transaction.commit();
         return book;
     } catch (e) {
