@@ -2,6 +2,7 @@ import * as bookRepository from "../repositories/book.repository.js";
 import * as publisherRepository from "../repositories/publisher.repository.js";
 import * as authorRepository from "../repositories/author.repository.js";
 import {sequelize} from "../config/database.js";
+import {Author} from "../model/index.js";
 
 export const addBook = async (book) => {
     const t = await sequelize.transaction();
@@ -32,11 +33,30 @@ export const addBook = async (book) => {
     } catch (e) {
         await t.rollback();
         console.log('Error adding book:', e);
+        throw e;
     }
 }
 
 export const findBookByIsbn = async (isbn) => {
-    // TODO: Implement findBookByIsbn service
+    const book = await bookRepository.findBookById(isbn, {
+        include: [
+            {
+                model: Author,
+                as: 'authors',
+                attributes: {
+                    include: ['name', [sequelize.col('birth_date'), 'birthDate']],
+                    exclude: ['birth_date']
+                },
+                through: {
+                    attributes: []
+                }
+            },
+        ],
+    });
+    if (!book) {
+        throw new Error(`Book with ISBN ${isbn} not found`);
+    }
+    return book;
 }
 
 export const removeBook = async (isbn) => {
