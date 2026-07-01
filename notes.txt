@@ -4,3 +4,4 @@ npm i dotenv nodemon -D
 npm i express cross-env
 npm i sequelize
 npm i mysql2
+npm i pg

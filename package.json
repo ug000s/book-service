@@ -17,7 +17,7 @@
   "dependencies": {
     "cross-env": "^10.1.0",
     "express": "^5.2.1",
-    "mysql2": "^3.22.5",
+    "pg": "^8.22.0",
     "sequelize": "^6.37.8"
   }
 }
