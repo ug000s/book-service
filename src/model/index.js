@@ -8,7 +8,8 @@ import {DataTypes} from "sequelize";
 Book.belongsTo(Publisher, {
     foreignKey: 'publisher',
     targetKey: 'publisher_name',
-    as: 'publisherDetails'
+    as: 'publisherDetails',
+    onDelete: 'CASCADE'
 })
 
 Publisher.hasMany(Book, {
